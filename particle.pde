@@ -1,7 +1,7 @@
 class Particle{
   PVector location;
   PVector velocity;
-  PVector acceleration;
+  PVector acceleration = new PVector(0,0);
 
   float size = random(5,20);
   float mass; 
@@ -12,7 +12,6 @@ class Particle{
   Particle(PVector loc, PVector vel, color c_){
     location = loc.get();
     velocity = vel.get();
-    acceleration = new PVector(0, 0.01);
     mass = size;
     c = c_;
   }
@@ -20,9 +19,18 @@ class Particle{
   void run(){
     move();
     display();
-    //checkBoundaryCollision();
-    lifespan--;
+    lifeCycle();
   }
+
+ void move(){
+   applyForce(wind);
+   applyForce(gravity);
+   flutter();
+   velocity.add(acceleration);
+   location.add(velocity);
+   acceleration.mult(0);
+   lifeCycle();
+ }
    
   void display(){
     fill(c);
@@ -34,18 +42,9 @@ class Particle{
    f.div(mass);
    acceleration.add(f);
  }
- 
- void move(){
-   applyForce(wind);
-   applyForce(gravity);
-   flutter();
-   velocity.add(acceleration);
-   location.add(velocity);
-   acceleration.mult(0);
-   grow();
- }
 
-  void grow(){
+  void lifeCycle(){
+   lifespan--;
    if(frameCount % 20 == 0 && size > 0){
      size--; // Actually shrink
    }

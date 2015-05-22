@@ -2,11 +2,13 @@ import java.util.Iterator;
 ArrayList<ParticleSystem> particleSystems;
 //Repeller rep;
 
-PVector gravity = new PVector(0, 0.5);
+PVector gravity = new PVector(0, 0.1);
 PVector wind = new PVector(0.0, 0);
 
 PVector psLocation;
 color psColor;
+
+int particleCount = 0;
 
 void setup(){
   background(0); 
@@ -35,7 +37,6 @@ void draw(){
     case 'r':
       removeLast();
       break;
-
     }
   }
 
@@ -46,7 +47,12 @@ void draw(){
   while (it.hasNext()) {
     ParticleSystem ps = (ParticleSystem) it.next();
     ps.run();
+    particleCount = particleCount + ps.psParticleCount;
   }
+
+  fill(255);
+  text(str(particleCount), 10, 10, 70, 80);
+  particleCount = 0;
 }
 
 void addNewPS(PVector loc, color col) {
