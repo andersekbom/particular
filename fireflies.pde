@@ -2,7 +2,7 @@ import java.util.Iterator;
 ArrayList<ParticleSystem> particleSystems;
 //Repeller rep;
 
-PVector gravity = new PVector(0, 0.1);
+PVector gravity = new PVector(0, 0.0);
 PVector wind = new PVector(0.0, 0);
 
 PVector psLocation;
