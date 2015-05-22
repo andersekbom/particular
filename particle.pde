@@ -52,12 +52,12 @@ class Particle{
 
   void flutter(){
    PVector flutter = PVector.random2D();
-   flutter.mult(1);
+   flutter.mult(flutterAmount);
    applyForce(flutter);   
   }
 
   boolean isDead(){
-    if(lifespan < 0){
+    if(lifespan < 0 || location.x < 0 || location.x > width || location.y < 0 || location.y > height){
       return true;
     }else if(lifespan < 3 && lifespan > 0){
       die();
@@ -71,5 +71,6 @@ class Particle{
     size = size+5;
     c = color(255);
   }
+
 
 }

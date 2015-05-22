@@ -29,7 +29,7 @@ class ParticleSystem {
 
   void addParticle(){
     cFuzzed = fuzzyColor(c);
-    velocity = new PVector(random(-2,2),random(-2,2)); // Each particle gets an individual velocity
+    velocity = new PVector(0,0);
     particles.add(new Particle(origin, velocity, cFuzzed));
   }
   
