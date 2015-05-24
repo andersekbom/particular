@@ -15,7 +15,9 @@ class ParticleSystem {
   }
 
   void run(){
-    addParticle();
+    if(frameCount % frameFreq == 0) {
+      addParticle();
+    }
     Iterator<Particle> it = particles.iterator();
     while (it.hasNext()) {
       Particle p = (Particle) it.next();

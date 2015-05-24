@@ -3,7 +3,7 @@ class Particle{
   PVector velocity;
   PVector acceleration = new PVector(0,0);
 
-  float size = random(5,20);
+  float size = random(particleSize/2,particleSize*2);
   float mass; 
   color c;
 

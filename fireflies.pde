@@ -12,8 +12,8 @@ int particleCount = 0;
 
 int r = 128, g = 128, b = 128;
 int flutterAmount = 0;
-
-String s;
+int frameFreq = 1;
+int particleSize = 10;
 
 void setup(){
   background(0); 
@@ -35,6 +35,8 @@ void draw(){
   psColor = color(r,g,b);
 
   flutterAmount = constrain(flutterAmount,0,5);
+  frameFreq = constrain(frameFreq,1,100);
+  particleSize = constrain(particleSize,1,100);
 
   //Repeller rep = new Repeller(new PVector(mouseX,mouseY), (height-mouseY)/5);
   //rep.display();
@@ -102,6 +104,14 @@ void drawGUI(){
   text("F - Increase flutter", 10, 180, 500, 50);
   text("f - Decrease flutter", 10, 195, 500, 50);
 
+  text("Particles released every " + frameFreq + "th frame", 10, 220, 500, 50);
+  text("å - Increase frameFreq", 10, 235, 500, 50);
+  text("ä - Decrease frameFreq", 10, 250, 500, 50);
+
+  text("Particle size: " + particleSize, 10, 275, 500, 50);
+  text("p - Increase size", 10, 290, 500, 50);
+  text("ö - Decrease size", 10, 305, 500, 50);
+
   fill(r,g,b);
   rect(10,height-103,30,30);
   fill(255);
@@ -157,6 +167,18 @@ void keyReleased(){
     g=128;
     b=128;
     break;
-    
+  case 'å':
+    frameFreq += 5;
+    break;
+  case 'ä':
+    frameFreq -= 5;
+    break;    
+  case 'p':
+    particleSize++;
+    break;
+  case 'ö':
+    particleSize--;
+    break;    
+
   }
 }
