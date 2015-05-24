@@ -5,15 +5,15 @@ class Particle{
 
   float size = random(particleSize/2,particleSize*2);
   float mass; 
+  float particleLifespan;
   color c;
-
-  int lifespan = (int) random(100,500);
   
   Particle(PVector loc, PVector vel, color c_){
     location = loc.get();
     velocity = vel.get();
     mass = size;
     c = c_;
+    particleLifespan = random(100,500) * lifespan;
   }
  
   void run(){
@@ -44,7 +44,7 @@ class Particle{
  }
 
   void lifeCycle(){
-   lifespan--;
+   particleLifespan--;
    if(frameCount % 20 == 0 && size > 0){
      size--; // Actually shrink
    }
@@ -57,9 +57,9 @@ class Particle{
   }
 
   boolean isDead(){
-    if(lifespan < 0 || location.x < 0 || location.x > width || location.y < 0 || location.y > height){
+    if(particleLifespan < 0 || location.x < 0 || location.x > width || location.y < 0 || location.y > height){
       return true;
-    }else if(lifespan < 3 && lifespan > 0){
+    }else if(particleLifespan < 3 && particleLifespan > 0){
       die();
       return false;
     }else{

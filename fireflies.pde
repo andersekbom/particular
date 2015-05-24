@@ -4,22 +4,25 @@ ArrayList<ParticleSystem> particleSystems;
 
 PVector gravity = new PVector(0, 0.0);
 PVector wind = new PVector(0.0, 0);
-
 PVector psLocation;
 color psColor;
 
 int particleCount = 0;
-
 int r = 128, g = 128, b = 128;
 int flutterAmount = 0;
 int frameFreq = 1;
 int particleSize = 10;
+int particleType = 1;
+
+float lifespan = 1.0;
+
+boolean showGUI = false;
 
 void setup(){
   background(0); 
   size(displayWidth,displayHeight);
   noStroke();
-
+  rectMode(CENTER);
   particleSystems = new ArrayList<ParticleSystem>();
   psLocation = new PVector(width/2, height/2);
   psColor = color(r,g,b);
@@ -27,8 +30,8 @@ void setup(){
 
 void draw(){
   fill(0,100);
-  rect(0,0,width,height);
-
+  rect(width/2,height/2,width,height);
+  
   r = constrain(r,0,255);
   g = constrain(g,0,255);
   b = constrain(b,0,255);
@@ -37,7 +40,7 @@ void draw(){
   flutterAmount = constrain(flutterAmount,0,5);
   frameFreq = constrain(frameFreq,1,100);
   particleSize = constrain(particleSize,1,100);
-
+  lifespan = constrain(lifespan,0.1,2.0);
   //Repeller rep = new Repeller(new PVector(mouseX,mouseY), (height-mouseY)/5);
   //rep.display();
 
@@ -47,8 +50,14 @@ void draw(){
     ps.run();
     particleCount = particleCount + ps.psParticleCount;
   }
-
-  drawGUI();
+  if(showGUI) {
+    drawGUI();
+  }else{
+    rectMode(CORNER);
+    fill(50);
+    text("Press § to show GUI.", 10, 10, 500, 50);
+    rectMode(CENTER); 
+  }
 
   if(mousePressed && (mouseButton == LEFT)) {
     psLocation.set(mouseX,mouseY);  
@@ -59,8 +68,6 @@ void draw(){
     psLocation.set(mouseX,mouseY);
     removePS(psLocation);
   }
-
-
 }
 
 void addNewPS(PVector loc, color col) {
@@ -78,15 +85,35 @@ void removePS(PVector loc) {
       it.remove();
     }
   }
+}
+
+void clearAll() {
+  gravity.set(0,0);
+  wind.set(0,0);
+  r=128;
+  g=128;
+  b=128;
+  particleSize = 10;
+  flutterAmount = 0;
+  frameFreq = 1;
+  lifespan = 1;
   
-  
+  Iterator<ParticleSystem> it = particleSystems.iterator();
+  while (it.hasNext()) {
+    ParticleSystem ps = (ParticleSystem) it.next();
+    it.remove();
+  }
 }
 
 void drawGUI(){
 
+  rectMode(CORNER);  
+  fill(20,100);
+  rect(0,0,230,height); // Semi-transparent pane behind GUI.
+
   stroke(255);
   fill(255);
-
+  
   text("Particles: " + str(particleCount), 10, 10, 500, 50);
   particleCount = 0;
   text("Left mouse - New sprinkler", 10, 25, 500, 50);
@@ -112,6 +139,10 @@ void drawGUI(){
   text("p - Increase size", 10, 290, 500, 50);
   text("ö - Decrease size", 10, 305, 500, 50);
 
+  text("Lifespan: " + lifespan, 10, 330, 500, 50);
+  text("l - Increase lifespan", 10, 345, 500, 50);
+  text("L - Decrease lifespan", 10, 360, 500, 50);
+
   fill(r,g,b);
   rect(10,height-103,30,30);
   fill(255);
@@ -121,7 +152,7 @@ void drawGUI(){
   text("C - Reset color", 10, height-60, 500, 50);
 
   noStroke();
-
+  rectMode(CENTER);
 }
 
 void keyReleased(){
@@ -172,13 +203,38 @@ void keyReleased(){
     break;
   case 'ä':
     frameFreq -= 5;
-    break;    
+    break;
   case 'p':
     particleSize++;
     break;
   case 'ö':
     particleSize--;
     break;    
+  case '0':
+    clearAll();
+    break;
+  case '§':
+    if(showGUI) {
+      showGUI = false;
+    }else{
+      showGUI = true;
+    }
+    break;
+  case 'l':
+    lifespan-=0.1;
+    break;
+  case 'L':
+    lifespan+=0.1;
+    break;
+  case '1':
+    particleType = 1;
+    break;
+  case '2':
+    particleType = 2;
+    break;
+  case '3':
+    particleType = 3;
+    break;
 
   }
 }
