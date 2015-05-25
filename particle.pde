@@ -71,6 +71,4 @@ class Particle{
     size = size+5;
     c = color(255);
   }
-
-
 }

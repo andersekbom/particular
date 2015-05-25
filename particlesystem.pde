@@ -31,16 +31,16 @@ class ParticleSystem {
 
   void addParticle(){
     cFuzzed = fuzzyColor(c);
-    velocity = new PVector(0,0);
+    velocity = new PVector(impulseX,impulseY);
   switch(particleType) {
     case 1: 
-      particles.add(new Particle(origin, velocity, cFuzzed));
+      particles.add(new Circle(origin, velocity, cFuzzed));
       break;    
     case 2:
       particles.add(new Square(origin, velocity, cFuzzed));
       break;    
     case 3: 
-      particles.add(new Circle(origin, velocity, cFuzzed));
+      particles.add(new Star(origin, velocity, cFuzzed));
       break;
     }
   }

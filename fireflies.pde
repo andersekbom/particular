@@ -5,21 +5,22 @@ ArrayList<ParticleSystem> particleSystems;
 PVector gravity = new PVector(0, 0.0);
 PVector wind = new PVector(0.0, 0);
 PVector psLocation;
-color psColor;
+color psColor, bgColor;
 
 int particleCount = 0;
 int r = 128, g = 128, b = 128;
-int flutterAmount = 0;
 int frameFreq = 1;
 int particleSize = 10;
 int particleType = 1;
+int impulseX = 0, impulseY = 0;
 
+float impulseResolution = 1;
 float lifespan = 1.0;
+float flutterAmount = 0;
 
 boolean showGUI = false;
 
 void setup(){
-  background(0); 
   size(displayWidth,displayHeight);
   noStroke();
   rectMode(CENTER);
@@ -29,7 +30,7 @@ void setup(){
 }
 
 void draw(){
-  fill(0,100);
+  fill(bgColor,100);
   rect(width/2,height/2,width,height);
   
   r = constrain(r,0,255);
@@ -54,7 +55,7 @@ void draw(){
     drawGUI();
   }else{
     rectMode(CORNER);
-    fill(50);
+    fill(80);
     text("Press § to show GUI.", 10, 10, 500, 50);
     rectMode(CENTER); 
   }
@@ -90,19 +91,28 @@ void removePS(PVector loc) {
 void clearAll() {
   gravity.set(0,0);
   wind.set(0,0);
-  r=128;
-  g=128;
-  b=128;
   particleSize = 10;
   flutterAmount = 0;
   frameFreq = 1;
   lifespan = 1;
-  
+ 
   Iterator<ParticleSystem> it = particleSystems.iterator();
   while (it.hasNext()) {
     ParticleSystem ps = (ParticleSystem) it.next();
     it.remove();
   }
+}
+
+void setPSColor() {
+  Iterator<ParticleSystem> it = particleSystems.iterator();
+  while (it.hasNext()) {
+    ParticleSystem ps = (ParticleSystem) it.next();
+    ps.c = psColor;
+  }
+}
+
+void setBGColor() {
+ bgColor = color(r,g,b);   
 }
 
 void drawGUI(){
@@ -143,98 +153,121 @@ void drawGUI(){
   text("l - Increase lifespan", 10, 345, 500, 50);
   text("L - Decrease lifespan", 10, 360, 500, 50);
 
+  text("1 - Circles", 10, 385, 500, 50);
+  text("2 - Squares", 10, 400, 500, 50);
+  text("3 - Stars", 10, 415, 500, 50);
+
+  text("Impulse X: " + impulseX*-1, 10, 435, 500, 50);
+  text("Impulse Y: " + impulseY*-1, 10, 450, 500, 50);
+  
   fill(r,g,b);
   rect(10,height-103,30,30);
   fill(255);
   text("Red [q/w]: " + str(r), 47, height-107, 500, 50);
   text("Green [a/s]: " + str(g), 47, height-92, 500, 50);
   text("Blue [z/x]: " + str(b), 47, height-76, 500, 50);
-  text("C - Reset color", 10, height-60, 500, 50);
+  text("c - Set foreground color", 10, height-60, 500, 50);
+  text("b - Set background color", 10, height-45, 500, 50);
 
   noStroke();
   rectMode(CENTER);
 }
 
 void keyReleased(){
-  switch(key){
-  case 'G':
-    gravity.add(0,0.1,0);
-    break;
-  case 'g':
-    gravity.add(0,-0.1,0);
-    break;
-  case 'H':
-    wind.add(0.1,0,0);
-    break;
-  case 'h':
-    wind.sub(0.1,0,0);
-    break;
-  case 'q':
-    r--;
-    break;
-  case 'w':
-    r++;
-    break;
-  case 'a':
-    g--;
-    break;
-  case 's':
-    g++;
-    break;
-  case 'z':
-    b--;
-    break;
-  case 'x':
-    b++;
-    break;
-  case 'F':
-    flutterAmount++;
-    break;
-  case 'f':
-    flutterAmount--;
-    break;
-  case 'c':
-    r=128;
-    g=128;
-    b=128;
-    break;
-  case 'å':
-    frameFreq += 5;
-    break;
-  case 'ä':
-    frameFreq -= 5;
-    break;
-  case 'p':
-    particleSize++;
-    break;
-  case 'ö':
-    particleSize--;
-    break;    
-  case '0':
-    clearAll();
-    break;
-  case '§':
-    if(showGUI) {
-      showGUI = false;
-    }else{
-      showGUI = true;
+  if (key == CODED) {
+    if (keyCode == UP) {
+      impulseY-=impulseResolution;
+    } else if (keyCode == DOWN) {
+      impulseY+=impulseResolution;
+    } else if (keyCode == LEFT) {
+      impulseX-=impulseResolution;
+    } else if (keyCode == RIGHT) {
+      impulseX+=impulseResolution;
     }
-    break;
-  case 'l':
-    lifespan-=0.1;
-    break;
-  case 'L':
-    lifespan+=0.1;
-    break;
-  case '1':
-    particleType = 1;
-    break;
-  case '2':
-    particleType = 2;
-    break;
-  case '3':
-    particleType = 3;
-    break;
-
+  }else{
+    switch(key){
+    case 'G':
+      gravity.add(0,0.1,0);
+      break;
+    case 'g':
+      gravity.add(0,-0.1,0);
+      break;
+    case 'H':
+      wind.add(0.1,0,0);
+      break;
+    case 'h':
+      wind.sub(0.1,0,0);
+      break;
+    case 'q':
+      r--;
+      break;
+    case 'w':
+      r++;
+      break;
+    case 'a':
+      g--;
+      break;
+    case 's':
+      g++;
+      break;
+    case 'z':
+      b--;
+      break;
+    case 'x':
+      b++;
+      break;
+    case 'F':
+      flutterAmount+=0.5;
+      break;
+    case 'f':
+      flutterAmount-=0.5;
+      break;
+    case 'c':
+      setPSColor();
+      // r=128;
+      // g=128;
+      // b=128;
+      break;
+    case 'å':
+      frameFreq += 5;
+      break;
+    case 'ä':
+      frameFreq -= 5;
+      break;
+    case 'p':
+      particleSize++;
+      break;
+    case 'ö':
+      particleSize--;
+      break;    
+    case '0':
+      clearAll();
+      break;
+    case '§':
+      if(showGUI) {
+        showGUI = false;
+      }else{
+        showGUI = true;
+      }
+      break;
+    case 'l':
+      lifespan-=0.1;
+      break;
+    case 'L':
+      lifespan+=0.1;
+      break;
+    case '1':
+      particleType = 1;
+      break;
+    case '2':
+      particleType = 2;
+      break;
+    case '3':
+      particleType = 3;
+      break;
+    case 'b':
+      setBGColor();
+      break;
+    }
   }
 }
